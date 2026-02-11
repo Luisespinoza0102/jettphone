@@ -20,6 +20,10 @@ body {
     box-sizing: inherit;
 }
 
+.precio {
+    color: var(--jett-gold);
+    font-weight: bold;
+}
 /* ================= ESTILOS SECCIÓN HERO ================= */
 
 .jett-hero {
@@ -74,9 +78,28 @@ body {
     font-weight: 800; /* Extra bold */
     text-transform: uppercase;
     letter-spacing: 2px; /* Separación entre letras */
-    margin: 0 0 20px 0; /* Margen inferior */
+    margin: 10px 0 20px 0; /* Margen inferior */
     line-height: 1;
 }
+
+.hero-logo {
+    width: 120px;       /* Tamaño del círculo */
+    height: 120px;
+    margin: 0 auto 20px; /* Centrado y con espacio abajo */
+    border-radius: 50%; /* Hace que sea un círculo perfecto */
+    overflow: hidden;    /* Corta la imagen en círculo */
+    border: 3px solid #FFD700; /* Borde dorado */
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); /* Resplandor dorado suave */
+    background-color: #000;
+}
+
+.hero-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajusta la imagen sin deformarla */
+}
+
+
 
 /* ================= SECCIÓN PRODUCTOS ================= */
 .products-section {

@@ -1,0 +1,381 @@
+/* --- Variables Globales (Colores de la marca) --- */
+:root {
+    --jett-gold: #FFD700;     /* El color amarillo/dorado principal */
+    --jett-dark-bg: #121212;  /* Color de fondo muy oscuro */
+    --jett-text-light: #E0E0E0; /* Color para texto secundario (casi blanco) */
+    --jett-font: 'Montserrat', sans-serif; /* La tipografía elegida */
+}
+
+/* --- Estilos Base --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--jett-font);
+    background-color: var(--jett-dark-bg);
+    color: white;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* ================= ESTILOS SECCIÓN HERO ================= */
+
+.jett-hero {
+    /* Altura mínima: ocupa toda la pantalla del móvil */
+    min-height: 100vh; 
+    
+    /* Centrado del contenido con Flexbox */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px 20px;
+    background: url('/img/fondo.png') no-repeat center center/cover;
+   
+    
+    /* Efecto de sombra interna para oscurecer los bordes (vignette) */
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+}
+
+.hero-container {
+    max-width: 600px; /* Ancho máximo para que no se desparrame en PC */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Asegura que todo esté centrado horizontalmente */
+}
+
+/* --- Badge Superior --- */
+.badge-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre icono y texto */
+    
+    color: var(--jett-gold);
+    border: 2px solid var(--jett-gold);
+    padding: 8px 20px;
+    border-radius: 50px; /* Bordes completamente redondeados */
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 40px; /* Espacio debajo del badge */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); /* Resplandor sutil dorado */
+}
+
+.badge-premium svg {
+    stroke: var(--jett-gold); /* Color del icono SVG */
+}
+
+/* --- Título Principal --- */
+.hero-title {
+    color: var(--jett-gold);
+    font-size: 3.5rem; /* Tamaño grande para móvil */
+    font-weight: 800; /* Extra bold */
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Separación entre letras */
+    margin: 0 0 20px 0; /* Margen inferior */
+    line-height: 1;
+}
+
+/* ================= SECCIÓN PRODUCTOS ================= */
+.products-section {
+    padding: 80px 20px;
+    background-color: var(--jett-dark-bg);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 10px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.text-gold {
+    color: var(--jett-gold);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #888;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+    font-size: 1rem;
+}
+
+/* --- Filtros --- */
+.filters-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 50px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--jett-gold);
+    color: var(--jett-gold);
+    padding: 10px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: var(--jett-font);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--jett-gold);
+    color: var(--jett-dark-bg);
+}
+
+/* --- Grid de Productos --- */
+.products-grid {
+    display: grid;
+    /* Grid responsivo: crea tantas columnas como quepan (mínimo 300px ancho) */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Tarjeta de Producto (Card) --- */
+.product-card {
+    background-color: #1a1a1a; /* Un poco más claro que el fondo negro */
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none; /* Quitar subrayado del enlace */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15); /* Resplandor dorado al pasar mouse */
+    border-color: var(--jett-gold);
+}
+
+.card-image {
+    width: 100%;
+    height: 250px; /* Altura fija para la imagen */
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Asegura que la imagen se vea completa */
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-image img {
+    transform: scale(1.05); /* Zoom sutil en la imagen al hacer hover */
+}
+
+.card-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.card-quote {
+    color: var(--jett-gold);
+    font-style: italic;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.card-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.card-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.btn-card {
+    margin-top: auto; /* Empuja el botón al fondo de la tarjeta */
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #333;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.product-card:hover .btn-card {
+    background-color: var(--jett-gold);
+    color: var(--jett-dark-bg);
+}
+
+/* ================= BOTÓN FLOTANTE WHATSAPP ================= */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25D366;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+}
+
+.jett-footer {
+    background-color: #0a0a0a;
+    padding: 50px 20px 20px;
+    margin-top: 50px;
+    border-top: 2px solid #333;
+    text-align: center;
+}
+
+.footer-logo {
+    color: #FFD700; /* Dorado */
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.footer-tagline {
+    color: #888;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.social-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.social-icon img {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 8px;
+    filter: grayscale(100%); /* Los hace elegantes en gris */
+    transition: 0.3s;
+}
+
+.social-icon:hover img {
+    filter: grayscale(0%); /* Vuelven a color al pasar el mouse */
+    transform: translateY(-5px);
+}
+
+.social-icon span {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.footer-bottom {
+    border-top: 1px solid #222;
+    padding-top: 20px;
+    font-size: 0.75rem;
+    color: #555;
+}
+
+/* Animación de latido para el botón */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+/* Ajuste para pantallas más grandes */
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 5rem;
+    }
+}
+
+/* --- Subtítulos --- */
+.hero-subtitle {
+    color: var(--jett-text-light);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.hero-quote {
+    color: var(--jett-gold);
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 500;
+    margin-bottom: 50px; /* Espacio grande antes del botón */
+}
+
+/* --- Botón Principal (CTA) --- */
+.btn-jett-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    background-color: var(--jett-gold);
+    color: var(--jett-dark-bg); /* Texto negro sobre fondo amarillo */
+    
+    text-decoration: none; /* Quitar subrayado de enlace */
+    padding: 16px 40px;
+    border-radius: 12px; /* Bordes redondeados pero no completos */
+    font-size: 1.1rem;
+    font-weight: 700;
+    
+    transition: all 0.3s ease; /* Suavizar animaciones al pasar el mouse */
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Efecto al pasar el mouse por encima del botón */
+.btn-jett-primary:hover {
+    transform: translateY(-3px); /* Se mueve ligeramente hacia arriba */
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5); /* Sombra más intensa */
+}
+
+.btn-jett-primary svg {
+    stroke: var(--jett-dark-bg); /* El icono dentro del botón es negro */
+}

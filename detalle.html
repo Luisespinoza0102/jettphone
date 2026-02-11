@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto - Jettphone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/img/icono.jpg">
+    <style>
+        .product-detail-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .detail-image-section { display: flex; flex-direction: column; gap: 15px; }
+        .main-img-container { 
+            background: #1a1a1a; 
+            border-radius: 20px; 
+            padding: 20px; 
+            border: 1px solid #333;
+            display: flex;
+            justify-content: center;
+        }
+        .main-img-container img { max-width: 100%; border-radius: 10px; }
+        .thumbnail-grid { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .thumb { 
+            width: 80px; height: 80px; object-fit: cover; 
+            border-radius: 10px; cursor: pointer; border: 2px solid transparent; opacity: 0.6;
+        }
+        .thumb.active { border-color: #FFD700; opacity: 1; }
+        .detail-info h1 { font-size: 2.2rem; color: #FFD700; margin-bottom: 10px; }
+        .detail-price { font-size: 2.5rem; color: white; font-weight: 800; margin-bottom: 15px; display: block; }
+        .shipping-info { color: #25D366; font-weight: 600; margin-bottom: 25px; }
+        .detail-desc { color: #ccc; line-height: 1.8; margin-bottom: 30px; font-size: 1.1rem; }
+        .detail-desc ul { list-style: none; padding: 0; }
+        .btn-buy-wa {
+            background-color: #25D366; color: white; padding: 18px 35px;
+            text-decoration: none; border-radius: 12px; font-weight: bold;
+            display: inline-flex; align-items: center; gap: 12px; font-size: 1.2rem;
+        }
+        @media (max-width: 850px) { .product-detail-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div style="padding: 20px 40px;">
+        <a href="index.html" style="color: #FFD700; text-decoration: none; font-weight: 600;">&larr; Volver al Catálogo</a>
+    </div>
+
+    <div id="product-content" class="product-detail-container">
+        </div>
+
+    <script>
+        // BASE DE DATOS DE PRODUCTOS
+        const productos = {
+            "airpods-pro-2": {
+                titulo: "AirPods Pro 2 ✅🎧",
+                precio: "20$",
+                entrega: "🚚 Entregas personales sin costo adicional",
+                descripcion: `
+                    <strong>Funciones 🔥</strong><br><br>
+                    <ul>
+                        <li>• Vinculación directa 📲</li>
+                        <li>• Personalización de nombre 📳</li>
+                        <li>• Controladores táctil 🎛️</li>
+                        <li>• Cancelación de ruido (pasiva) 🎧</li>
+                        <li>• Sonido 1.1 💥</li>
+                        <li>• Puerto de carga lightning 🔋</li>
+                        <li>• GPS 📍</li>
+                    </ul>
+                `,
+                imagenes: ["/img/airpods1.jpeg", "/img/airpods2.jpeg", "/img/airpods3.jpeg", "/img/airpods4.jpeg", "/img/airpods5.jpeg"],
+                wa_msg: "Hola Jettphone, estoy interesado en los AirPods Pro 2 de 20$"
+            },
+            "estuches-airpods": {
+                titulo: "Estuches de AirPods 🛡️✨",
+                precio: "6$", // Puedes poner un precio fijo si prefieres
+                entrega: "🚚 Entregas personales sin costo adicional",
+                descripcion: `
+                    <strong>Detalles del Producto</strong><br><br>
+                    Dale un estilo único a tus AirPods con nuestros forros de alta gama:<br><br>
+                    <ul>
+                        <li>• <strong>Modelos Exclusivos:</strong> Stitch, Gucci, Spigen y más 📲</li>
+                        <li>• <strong>Protección Total:</strong> Materiales resistentes a caídas y golpes 💥</li>
+                        <li>• <strong>Calidad Premium:</strong> Excelente tacto y ajuste perfecto 🎛️</li>
+                        <li>• Compatibles con AirPods Pro y modelos similares 🎧</li>
+                    </ul>
+                `,
+                imagenes: [
+                    "/img/estuche1.jpg", 
+                    "/img/estuche2.jpg", 
+                    "/img/estuche3.jpg", 
+                    "/img/estuche4.jpg", 
+                    "/img/estuche5.jpg"
+                ],
+                wa_msg: "Hola Jettphone, me gustaron los estuches para AirPods. ¿Qué modelos tienen disponibles?"
+            }, 
+
+            "apple-watch": {
+            titulo: "Apple Watch ⌚🔥",
+            precio: "40$", // Ajusta el precio si lo tienes
+            entrega: "🚚 Entregas personales sin costo adicional",
+            descripcion: `
+                <strong>Práctico y Moderno ✨</strong><br><br>
+                Mantente conectado y monitorea tu salud con lo último en tecnología:<br><br>
+                <ul>
+                    <li>• <strong>Conectividad Total:</strong> Recibe todas tus notificaciones al instante 📲</li>
+                    <li>• <strong>Llamadas:</strong> Responde llamadas telefónicas desde tu muñeca 📞</li>
+                    <li>• <strong>Salud:</strong> Monitoreo de frecuencia cardíaca en tiempo real ❤️</li>
+                    <li>• <strong>Multimedia:</strong> Control total de tu música favorita 🎵</li>
+                    <li>• <strong>Diseño:</strong> Estilo deportivo y elegante, perfecto para el día a día 🏃‍♂️</li>
+                </ul>
+            `,
+            imagenes: [
+                "/img/applewatch1.jpg", 
+                "/img/applewatch2.jpg", 
+                "/img/applewatch3.jpg"
+            ],
+            wa_msg: "Hola Jettphone! Me interesa el Apple Watch. ¿Podrían darme más información sobre los modelos disponibles?"
+        },
+
+        "forros-silicona": {
+            titulo: "Silicone Case para iPhone 📱🌈",
+            precio: "Consultar según modelo",
+            entrega: "🚚 Entregas personales sin costo adicional",
+            descripcion: `
+                <strong>Protección y Estilo con Acabado Premium ✨</strong><br><br>
+                Nuestros forros de silicona están diseñados para encajar a la perfección con tu iPhone, ofreciendo una experiencia única:<br><br>
+                <ul>
+                    <li>• <strong>Interior de Microfibra:</strong> Recubrimiento suave de gamuza para evitar rayones en la parte trasera de tu equipo 🧸</li>
+                    <li>• <strong>Acabado Soft-Touch:</strong> Silicona de alta calidad con un tacto sedoso que mejora el agarre 🤝</li>
+                    <li>• <strong>Protección Reforzada:</strong> Bordes elevados para cuidar la cámara y la pantalla de impactos directos 🛡️</li>
+                    <li>• <strong>Variedad Cromática:</strong> Disponible en colores vibrantes y tonos pasteles para todos los gustos 🎨</li>
+                    <li>• Disponibles desde iPhone 11 hasta iPhone 15 Pro Max 📲</li>
+                </ul>
+            `,
+            imagenes: [
+                "/img/forros1.jpg", 
+                "/img/forros2.jpg"
+            ],
+            wa_msg: "Hola Jettphone! ¿Tienen forros de silicona disponibles? Mi modelo de iPhone es: "
+        }, 
+
+        "cargador-25w": {
+            titulo: "Cargador 25W Certificado ⚡️🔋",
+            precio: "12$",
+            entrega: "🚚 Entregas personales sin costo adicional",
+            descripcion: `
+                <strong>Máxima Eficiencia y Seguridad</strong><br><br>
+                Carga tu equipo con la tranquilidad de usar un producto de alta calidad diseñado para proteger tu inversión:<br><br>
+                <ul>
+                    <li>• <strong>Carga Rápida 25W:</strong> Optimiza el tiempo de carga de tu batería de forma eficiente ⚡️</li>
+                    <li>• <strong>Salud de Batería:</strong> Tecnología certificada que <strong>no calienta</strong> el equipo ni disminuye la vida útil (%) de tu batería 🔋</li>
+                    <li>• <strong>Garantía de Calidad:</strong> Producto totalmente sellado con todas las certificaciones de caja correspondientes 📦</li>
+                    <li>• <strong>Seguridad Eléctrica:</strong> Protección contra sobrecargas y cortocircuitos integrada 🛡️</li>
+                </ul>
+            `,
+            imagenes: [
+                "/img/cargadores1.jpg", // Imagen del cargador o su caja
+                "/img/cargadores2.jpg", 
+                "/img/cargadores3.jpg",  // Imagen del puerto o detalles
+            ],
+            wa_msg: "Hola Jettphone! Me interesa el cargador de 25W certificado. ¿Tienen disponibilidad?"
+        }
+        };
+    
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const pid = urlParams.get('p');
+        const p = productos[pid];
+        const container = document.getElementById('product-content');
+
+        if (p) {
+            container.innerHTML = `
+                <div class="detail-image-section">
+                    <div class="main-img-container">
+                        <img id="main-view" src="${p.imagenes[0]}" alt="${p.titulo}">
+                    </div>
+                    <div class="thumbnail-grid">
+                        ${p.imagenes.map((img, i) => `
+                            <img src="${img}" class="thumb ${i===0?'active':''}" onclick="changeImg(this, '${img}')">
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="detail-info">
+                    <h1>${p.titulo}</h1>
+                    <span class="detail-price">${p.precio}</span>
+                    <p class="shipping-info">${p.entrega}</p>
+                    <div class="detail-desc">${p.descripcion}</div>
+                    <a href="https://wa.me/584246259603?text=${encodeURIComponent(p.wa_msg)}" class="btn-buy-wa" target="_blank">
+                        Comprar por WhatsApp
+                    </a>
+                </div>
+            `;
+        } else {
+            container.innerHTML = "<h1>Producto no encontrado</h1>";
+        }
+
+        function changeImg(el, src) {
+            document.getElementById('main-view').src = src;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -8,12 +8,24 @@
       "quote": "Sonido 1.1 y cancelación pasiva",
       "shipping": "🚚 Entregas personales sin costo adicional",
       "description": "<strong>Funciones 🔥</strong>",
-      "imagenes": ["img/airpods1.jpeg"],
+      "imagenes": [
+        "img/airpods1.jpeg"
+      ],
       "wa_msg": "Hola Jettphone, estoy interesado en los AirPods Pro 2"
     }
   ],
   "categories": [
-    { "id": "audifonos", "name": "Audífonos" },
-    { "id": "cargadores", "name": "Cargadores" }
+    {
+      "id": "audifonos",
+      "name": "Audífonos"
+    },
+    {
+      "id": "cargadores",
+      "name": "Cargadores"
+    },
+    {
+      "id": "forros",
+      "name": "Forros"
+    }
   ]
 }

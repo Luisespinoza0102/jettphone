@@ -46,7 +46,6 @@
             <!-- Menú de Categorías Dinámico -->
             <div class="filters-container" id="categoryFilters">
                 <button class="filter-btn active" data-filter="all">Todos</button>
-                <!-- Se inyectan dinámicamente desde la base de datos de categorías -->
             </div>
 
             <!-- Cuadrícula de Productos -->
@@ -66,7 +65,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
             const products = await getProducts();
-            const categories = getCategories();
+            const categories = await getCategories();
             
             const grid = document.getElementById('productsGrid');
             const searchInput = document.getElementById('searchInput');
@@ -80,8 +79,6 @@
                 <button class="filter-btn active" data-filter="all">Todos</button>
                 ${categories.map(c => `<button class="filter-btn" data-filter="${c.id}">${c.name}</button>`).join('')}
             `;
-
-            const filterBtns = document.querySelectorAll('.filter-btn');
 
             function renderProducts() {
                 const filtered = products.filter(p => {
@@ -118,6 +115,8 @@
 
             renderProducts();
 
+            // Asignar eventos de clic a los botones de filtro recién inyectados
+            const filterBtns = document.querySelectorAll('.filter-btn');
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterBtns.forEach(b => b.classList.remove('active'));

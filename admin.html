@@ -23,19 +23,13 @@
         .preview-thumb-container { position: relative; display: inline-block; }
         .preview-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid var(--jett-gold); background: #000; }
         .btn-remove-thumb { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1; display: flex; align-items: center; justify-content: center; }
-        
-        .json-alert { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--jett-gold); padding: 15px; border-radius: 10px; margin-bottom: 25px; color: #fff; font-size: 0.95rem; }
     </style>
 </head>
 <body>
     <div class="admin-container">
         <div class="admin-header">
             <h1 class="admin-title">Panel Admin - <span class="text-gold">Jettphone</span></h1>
-            <a href="index.html" class="btn-action" style="text-decoration:none;">Ver Tienda Pública &rarr;</a>
-        </div>
-
-        <div class="json-alert">
-            💡 <strong>Nota importante:</strong> Cada vez que guardes, edites o elimines un producto, el sistema actualizará los datos y **descargará automáticamente un archivo llamado <code>data.json</code>**. Solo debes colocar ese archivo descargado en la carpeta de tu proyecto y subirlo a GitHub para que tu tienda se actualice para todos.
+            <a href="index.html" class="btn-action" style="text-decoration:none;" target="_blank">Ver Tienda Pública &rarr;</a>
         </div>
 
         <div class="admin-grid-top">
@@ -90,7 +84,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-action" id="saveBtn">Guardar y Descargar data.json</button>
+                        <button type="submit" class="btn-action" id="saveBtn">Guardar Producto</button>
                         <button type="button" id="cancelBtn" class="btn-danger" style="display:none;" onclick="resetForm()">Cancelar</button>
                     </div>
                 </form>
@@ -147,7 +141,6 @@
     <script>
         let currentUploadedImages = [];
         let quillEditor;
-        let allProducts = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
             quillEditor = new Quill('#editor-container', {
@@ -162,7 +155,6 @@
                 }
             });
 
-            allProducts = await getProducts();
             loadCategoriesUI();
             loadAdminTable();
         });
@@ -233,15 +225,16 @@
             `).join('');
         }
 
-        function loadAdminTable() {
+        async function loadAdminTable() {
+            const products = await getProducts();
             const tbody = document.getElementById('adminTableBody');
             
-            if (allProducts.length === 0) {
+            if (products.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No hay productos registrados.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = allProducts.map(p => `
+            tbody.innerHTML = products.map(p => `
                 <tr>
                     <td><img src="${p.imagenes && p.imagenes.length > 0 ? p.imagenes[0] : 'img/icono.jpg'}" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px; background:#000; border:1px solid #333;"></td>
                     <td><strong>${p.id}</strong><br><span style="color:#aaa; font-size:0.85rem;">${p.title}</span></td>
@@ -255,23 +248,11 @@
             `).join('');
         }
 
-        // Función clave: Exportar y descargar el archivo data.json automáticamente
-        function exportToJsonFile() {
-            const dataObj = { products: allProducts };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "data.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
         document.getElementById('categoryForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('catId').value.trim().toLowerCase();
             const name = document.getElementById('catName').value.trim();
-            saveCategoryToLocal({ id, name });
+            saveCategory({ id, name });
             document.getElementById('categoryForm').reset();
             loadCategoriesUI();
             alert('¡Categoría creada con éxito!');
@@ -279,20 +260,19 @@
 
         function removeCategory(id) {
             if (confirm(`¿Eliminar categoría "${id}"?`)) {
-                deleteCategoryFromLocal(id);
+                deleteCategory(id);
                 loadCategoriesUI();
             }
         }
 
         // Guardar Producto
-        document.getElementById('productForm').addEventListener('submit', (e) => {
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const descriptionHTML = quillEditor.root.innerHTML;
-            const id = document.getElementById('prodId').value.trim();
 
             const productData = {
-                id: id,
+                id: document.getElementById('prodId').value.trim(),
                 title: document.getElementById('prodTitle').value.trim(),
                 price: document.getElementById('prodPrice').value.trim(),
                 category: document.getElementById('prodCategory').value,
@@ -303,23 +283,14 @@
                 wa_msg: document.getElementById('prodWa').value.trim() || `Hola Jettphone, estoy interesado en ${document.getElementById('prodTitle').value}`
             };
 
-            const idx = allProducts.findIndex(p => p.id === id);
-            if (idx >= 0) {
-                allProducts[idx] = productData;
-            } else {
-                allProducts.push(productData);
-            }
-
-            // Descargar automáticamente el data.json actualizado
-            exportToJsonFile();
-
-            alert('¡Producto guardado! Se ha descargado el archivo "data.json" actualizado. Guárdalo en la carpeta de tu proyecto.');
+            await saveProduct(productData);
+            alert('¡Producto guardado y actualizado en la tienda al instante!');
             resetForm();
             loadAdminTable();
         });
 
-        function editProduct(id) {
-            const p = allProducts.find(item => item.id === id);
+        async function editProduct(id) {
+            const p = await getProductById(id);
             if (!p) return;
 
             document.getElementById('prodId').value = p.id;
@@ -338,17 +309,15 @@
             document.getElementById('prodWa').value = p.wa_msg || '';
 
             document.getElementById('form-title').innerText = 'Editar Producto: ' + p.id;
-            document.getElementById('saveBtn').innerText = 'Actualizar y Descargar JSON';
+            document.getElementById('saveBtn').innerText = 'Actualizar Producto';
             document.getElementById('cancelBtn').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function removeProduct(id) {
+        async function removeProduct(id) {
             if (confirm(`¿Estás seguro de eliminar el producto "${id}"?`)) {
-                allProducts = allProducts.filter(p => p.id !== id);
-                exportToJsonFile();
+                await deleteProduct(id);
                 loadAdminTable();
-                alert('Producto eliminado. Se ha descargado el archivo "data.json" actualizado.');
             }
         }
 
@@ -359,7 +328,7 @@
             renderImagePreviews();
             document.getElementById('prodId').readOnly = false;
             document.getElementById('form-title').innerText = 'Crear / Editar Producto';
-            document.getElementById('saveBtn').innerText = 'Guardar y Descargar data.json';
+            document.getElementById('saveBtn').innerText = 'Guardar Producto';
             document.getElementById('cancelBtn').style.display = 'none';
         }
     </script>

@@ -155,8 +155,8 @@
                 }
             });
 
-            loadCategoriesUI();
-            loadAdminTable();
+            await loadCategoriesUI();
+            await loadAdminTable();
         });
 
         // Comprimir y convertir imágenes a Base64
@@ -211,8 +211,8 @@
             renderImagePreviews();
         }
 
-        function loadCategoriesUI() {
-            const categories = getCategories();
+        async function loadCategoriesUI() {
+            const categories = await getCategories();
             const select = document.getElementById('prodCategory');
             select.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
@@ -248,20 +248,27 @@
             `).join('');
         }
 
-        document.getElementById('categoryForm').addEventListener('submit', (e) => {
+        // Guardar Categoría
+        document.getElementById('categoryForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('catId').value.trim().toLowerCase();
             const name = document.getElementById('catName').value.trim();
-            saveCategory({ id, name });
-            document.getElementById('categoryForm').reset();
-            loadCategoriesUI();
-            alert('¡Categoría creada con éxito!');
+            
+            const success = await saveCategory({ id, name });
+            if (success) {
+                document.getElementById('categoryForm').reset();
+                await loadCategoriesUI();
+                alert('¡Categoría creada y guardada en GitHub con éxito!');
+            }
         });
 
-        function removeCategory(id) {
+        async function removeCategory(id) {
             if (confirm(`¿Eliminar categoría "${id}"?`)) {
-                deleteCategory(id);
-                loadCategoriesUI();
+                const success = await deleteCategory(id);
+                if (success) {
+                    await loadCategoriesUI();
+                    alert('Categoría eliminada de GitHub.');
+                }
             }
         }
 
@@ -283,10 +290,12 @@
                 wa_msg: document.getElementById('prodWa').value.trim() || `Hola Jettphone, estoy interesado en ${document.getElementById('prodTitle').value}`
             };
 
-            await saveProduct(productData);
-            alert('¡Producto guardado y actualizado en la tienda al instante!');
-            resetForm();
-            loadAdminTable();
+            const success = await saveProduct(productData);
+            if (success) {
+                alert('¡Producto guardado y actualizado en la nube global con éxito!');
+                resetForm();
+                await loadAdminTable();
+            }
         });
 
         async function editProduct(id) {
@@ -316,8 +325,11 @@
 
         async function removeProduct(id) {
             if (confirm(`¿Estás seguro de eliminar el producto "${id}"?`)) {
-                await deleteProduct(id);
-                loadAdminTable();
+                const success = await deleteProduct(id);
+                if (success) {
+                    await loadAdminTable();
+                    alert('Producto eliminado de la nube.');
+                }
             }
         }
 

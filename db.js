@@ -20,7 +20,7 @@ function getGitHubToken() {
 
 const FILE_PATH = 'data.json';
 
-// 1. Obtener todos los productos desde el archivo data.json en GitHub (Visible para todos)
+// 1. Obtener todos los productos desde el archivo data.json en GitHub
 async function getProducts() {
     try {
         const url = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${FILE_PATH}?t=${new Date().getTime()}`;
@@ -128,16 +128,16 @@ async function saveToGitHub(newProducts, newCategories) {
     }
 }
 
-// Funciones auxiliares llamadas desde el Panel Admin
+// Funciones auxiliares para el Panel Admin
 async function saveProduct(product) {
     let products = await getProducts();
     const categories = await getCategories();
     
     const idx = products.findIndex(p => p.id === product.id);
     if (idx >= 0) {
-        products[idx] = product; // Actualiza el producto existente
+        products[idx] = product;
     } else {
-        products.push(product);  // Crea uno nuevo
+        products.push(product);
     }
 
     return await saveToGitHub(products, categories);
@@ -158,8 +158,10 @@ async function saveCategory(cat) {
     if (!categories.some(c => c.id === cat.id)) {
         categories.push(cat);
         return await saveToGitHub(products, categories);
+    } else {
+        alert("¡Esta categoría ya existe!");
+        return false;
     }
-    return true;
 }
 
 async function deleteCategory(id) {

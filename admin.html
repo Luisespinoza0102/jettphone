@@ -23,6 +23,8 @@
         .preview-thumb-container { position: relative; display: inline-block; }
         .preview-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid var(--jett-gold); background: #000; }
         .btn-remove-thumb { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        
+        .json-alert { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--jett-gold); padding: 15px; border-radius: 10px; margin-bottom: 25px; color: #fff; font-size: 0.95rem; }
     </style>
 </head>
 <body>
@@ -30,6 +32,10 @@
         <div class="admin-header">
             <h1 class="admin-title">Panel Admin - <span class="text-gold">Jettphone</span></h1>
             <a href="index.html" class="btn-action" style="text-decoration:none;">Ver Tienda Pública &rarr;</a>
+        </div>
+
+        <div class="json-alert">
+            💡 <strong>Nota importante:</strong> Cada vez que guardes, edites o elimines un producto, el sistema actualizará los datos y **descargará automáticamente un archivo llamado <code>data.json</code>**. Solo debes colocar ese archivo descargado en la carpeta de tu proyecto y subirlo a GitHub para que tu tienda se actualice para todos.
         </div>
 
         <div class="admin-grid-top">
@@ -70,9 +76,9 @@
                         <div id="editor-container"></div>
                     </div>
 
-                    <!-- CARGA MÚLTIPLE DE FOTOS DESDE GALERÍA CON COMPRESIÓN AUTOMÁTICA -->
+                    <!-- CARGA MÚLTIPLE DE FOTOS DESDE GALERÍA -->
                     <div class="form-group">
-                        <label>Fotos del Producto (Selecciona todas las que quieras de tu galería)</label>
+                        <label>Fotos del Producto (Selecciona de tu galería)</label>
                         <input type="file" id="imageUploadInput" multiple accept="image/*" style="padding: 12px; background: #111; border-radius: 10px; cursor: pointer; width:100%;">
                         
                         <div id="imagesPreview" class="preview-images-grid"></div>
@@ -84,7 +90,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-action" id="saveBtn">Guardar Producto</button>
+                        <button type="submit" class="btn-action" id="saveBtn">Guardar y Descargar data.json</button>
                         <button type="button" id="cancelBtn" class="btn-danger" style="display:none;" onclick="resetForm()">Cancelar</button>
                     </div>
                 </form>
@@ -141,11 +147,12 @@
     <script>
         let currentUploadedImages = [];
         let quillEditor;
+        let allProducts = [];
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             quillEditor = new Quill('#editor-container', {
                 theme: 'snow',
-                placeholder: 'Escribe las características (ej: • Cancelación de ruido, • Batería de 6 horas...)',
+                placeholder: 'Escribe las características...',
                 modules: {
                     toolbar: [
                         ['bold', 'italic', 'underline'],
@@ -155,11 +162,12 @@
                 }
             });
 
+            allProducts = await getProducts();
             loadCategoriesUI();
             loadAdminTable();
         });
 
-        // Comprimir y convertir imágenes a Base64 automáticamente al seleccionarlas
+        // Comprimir y convertir imágenes a Base64
         document.getElementById('imageUploadInput').addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
             if (!files.length) return;
@@ -182,15 +190,13 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800; // Ancho máximo optimizado
+                        const MAX_WIDTH = 800;
                         const scaleSize = MAX_WIDTH / img.width;
                         canvas.width = MAX_WIDTH;
                         canvas.height = img.height > img.width ? img.height * scaleSize : (MAX_WIDTH * (img.height / img.width));
 
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        
-                        // Calidad del 70% para mantener excelente nitidez y poco peso
                         resolve(canvas.toDataURL('image/jpeg', 0.7));
                     };
                 };
@@ -227,16 +233,15 @@
             `).join('');
         }
 
-        async function loadAdminTable() {
-            const products = await getProducts();
+        function loadAdminTable() {
             const tbody = document.getElementById('adminTableBody');
             
-            if (products.length === 0) {
+            if (allProducts.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No hay productos registrados.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = products.map(p => `
+            tbody.innerHTML = allProducts.map(p => `
                 <tr>
                     <td><img src="${p.imagenes && p.imagenes.length > 0 ? p.imagenes[0] : 'img/icono.jpg'}" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px; background:#000; border:1px solid #333;"></td>
                     <td><strong>${p.id}</strong><br><span style="color:#aaa; font-size:0.85rem;">${p.title}</span></td>
@@ -250,29 +255,44 @@
             `).join('');
         }
 
+        // Función clave: Exportar y descargar el archivo data.json automáticamente
+        function exportToJsonFile() {
+            const dataObj = { products: allProducts };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "data.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
         document.getElementById('categoryForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('catId').value.trim().toLowerCase();
             const name = document.getElementById('catName').value.trim();
-            saveCategory({ id, name });
+            saveCategoryToLocal({ id, name });
             document.getElementById('categoryForm').reset();
             loadCategoriesUI();
+            alert('¡Categoría creada con éxito!');
         });
 
         function removeCategory(id) {
             if (confirm(`¿Eliminar categoría "${id}"?`)) {
-                deleteCategory(id);
+                deleteCategoryFromLocal(id);
                 loadCategoriesUI();
             }
         }
 
-        document.getElementById('productForm').addEventListener('submit', async (e) => {
+        // Guardar Producto
+        document.getElementById('productForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
             const descriptionHTML = quillEditor.root.innerHTML;
+            const id = document.getElementById('prodId').value.trim();
 
             const productData = {
-                id: document.getElementById('prodId').value.trim(),
+                id: id,
                 title: document.getElementById('prodTitle').value.trim(),
                 price: document.getElementById('prodPrice').value.trim(),
                 category: document.getElementById('prodCategory').value,
@@ -283,14 +303,23 @@
                 wa_msg: document.getElementById('prodWa').value.trim() || `Hola Jettphone, estoy interesado en ${document.getElementById('prodTitle').value}`
             };
 
-            await saveProduct(productData);
-            alert('¡Producto guardado exitosamente en la base de datos!');
+            const idx = allProducts.findIndex(p => p.id === id);
+            if (idx >= 0) {
+                allProducts[idx] = productData;
+            } else {
+                allProducts.push(productData);
+            }
+
+            // Descargar automáticamente el data.json actualizado
+            exportToJsonFile();
+
+            alert('¡Producto guardado! Se ha descargado el archivo "data.json" actualizado. Guárdalo en la carpeta de tu proyecto.');
             resetForm();
             loadAdminTable();
         });
 
-        async function editProduct(id) {
-            const p = await getProductById(id);
+        function editProduct(id) {
+            const p = allProducts.find(item => item.id === id);
             if (!p) return;
 
             document.getElementById('prodId').value = p.id;
@@ -309,15 +338,17 @@
             document.getElementById('prodWa').value = p.wa_msg || '';
 
             document.getElementById('form-title').innerText = 'Editar Producto: ' + p.id;
-            document.getElementById('saveBtn').innerText = 'Actualizar Producto';
+            document.getElementById('saveBtn').innerText = 'Actualizar y Descargar JSON';
             document.getElementById('cancelBtn').style.display = 'inline-block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function removeProduct(id) {
+        function removeProduct(id) {
             if (confirm(`¿Estás seguro de eliminar el producto "${id}"?`)) {
-                await deleteProduct(id);
+                allProducts = allProducts.filter(p => p.id !== id);
+                exportToJsonFile();
                 loadAdminTable();
+                alert('Producto eliminado. Se ha descargado el archivo "data.json" actualizado.');
             }
         }
 
@@ -328,7 +359,7 @@
             renderImagePreviews();
             document.getElementById('prodId').readOnly = false;
             document.getElementById('form-title').innerText = 'Crear / Editar Producto';
-            document.getElementById('saveBtn').innerText = 'Guardar Producto';
+            document.getElementById('saveBtn').innerText = 'Guardar y Descargar data.json';
             document.getElementById('cancelBtn').style.display = 'none';
         }
     </script>

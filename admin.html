@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Jettphone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="img/icono.jpg">
+
+    <!-- Editor de Texto Enriquecido Quill.js -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.min.js"></script>
+
+    <style>
+        .ql-toolbar.ql-snow { background: #1a1a1a; border-color: var(--jett-border) !important; border-top-left-radius: 10px; border-top-right-radius: 10px; }
+        .ql-container.ql-snow { background: #111; color: white; border-color: var(--jett-border) !important; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; min-height: 120px; font-family: inherit; }
+        .ql-stroke { stroke: #ccc !important; }
+        .ql-fill { fill: #ccc !important; }
+        .ql-picker { color: #ccc !important; }
+
+        .preview-images-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .preview-thumb-container { position: relative; display: inline-block; }
+        .preview-thumb { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid var(--jett-gold); background: #000; }
+        .btn-remove-thumb { position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; font-weight: bold; line-height: 1; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Panel Admin - <span class="text-gold">Jettphone</span></h1>
+            <a href="index.html" class="btn-action" style="text-decoration:none;">Ver Tienda Pública &rarr;</a>
+        </div>
+
+        <div class="admin-grid-top">
+            
+            <!-- CARD 1: FORMULARIO DE PRODUCTOS -->
+            <div class="admin-card">
+                <h2 id="form-title" class="card-heading">Crear / Editar Producto</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label>ID Único (ej: airpods-pro-3)</label>
+                        <input type="text" id="prodId" required placeholder="sin espacios ni mayúsculas">
+                    </div>
+                    <div class="form-group">
+                        <label>Título del Producto</label>
+                        <input type="text" id="prodTitle" required placeholder="AirPods Pro 3 ✅🎧">
+                    </div>
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="text" id="prodPrice" required placeholder="25$">
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select id="prodCategory" required>
+                            <!-- Se carga dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Eslogan / Frase Corta</label>
+                        <input type="text" id="prodQuote" placeholder="Sonido 1.1 y cancelación pasiva">
+                    </div>
+                    <div class="form-group">
+                        <label>Información de Envío</label>
+                        <input type="text" id="prodShipping" value="🚚 Entregas personales sin costo adicional">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción y Características</label>
+                        <div id="editor-container"></div>
+                    </div>
+
+                    <!-- CARGA MÚLTIPLE DE FOTOS DESDE GALERÍA CON COMPRESIÓN AUTOMÁTICA -->
+                    <div class="form-group">
+                        <label>Fotos del Producto (Selecciona todas las que quieras de tu galería)</label>
+                        <input type="file" id="imageUploadInput" multiple accept="image/*" style="padding: 12px; background: #111; border-radius: 10px; cursor: pointer; width:100%;">
+                        
+                        <div id="imagesPreview" class="preview-images-grid"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mensaje Predeterminado de WhatsApp</label>
+                        <input type="text" id="prodWa" placeholder="Hola Jettphone, estoy interesado en...">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-action" id="saveBtn">Guardar Producto</button>
+                        <button type="button" id="cancelBtn" class="btn-danger" style="display:none;" onclick="resetForm()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CARD 2: GESTIONAR CATEGORÍAS -->
+            <div class="admin-card">
+                <h2 class="card-heading">Gestionar Categorías</h2>
+                <form id="categoryForm">
+                    <div class="form-group">
+                        <label>ID Categoría (ej: smartwatches)</label>
+                        <input type="text" id="catId" required placeholder="smartwatches">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre Visible (ej: Smartwatches ⌚)</label>
+                        <input type="text" id="catName" required placeholder="Smartwatches ⌚">
+                    </div>
+                    <button type="submit" class="btn-action" style="width:100%;">Crear Categoría</button>
+                </form>
+
+                <div class="category-list-wrapper">
+                    <h3 style="color:white; font-size:1.1rem; margin-top:25px;">Categorías Existentes:</h3>
+                    <ul id="categoryListUl" class="category-list-ul">
+                        <!-- Se llena dinámicamente -->
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABLA DE INVENTARIO -->
+        <div class="admin-card" style="margin-top: 40px;">
+            <h2 class="card-heading">Inventario Actual de Productos</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>ID / Título</th>
+                            <th>Precio</th>
+                            <th>Categoría</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Se llena con JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        let currentUploadedImages = [];
+        let quillEditor;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            quillEditor = new Quill('#editor-container', {
+                theme: 'snow',
+                placeholder: 'Escribe las características (ej: • Cancelación de ruido, • Batería de 6 horas...)',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            loadCategoriesUI();
+            loadAdminTable();
+        });
+
+        // Comprimir y convertir imágenes a Base64 automáticamente al seleccionarlas
+        document.getElementById('imageUploadInput').addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+
+            for (let file of files) {
+                const base64Compressed = await compressAndConvertImage(file);
+                currentUploadedImages.push(base64Compressed);
+            }
+
+            renderImagePreviews();
+            e.target.value = ''; 
+        });
+
+        function compressAndConvertImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800; // Ancho máximo optimizado
+                        const scaleSize = MAX_WIDTH / img.width;
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height > img.width ? img.height * scaleSize : (MAX_WIDTH * (img.height / img.width));
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // Calidad del 70% para mantener excelente nitidez y poco peso
+                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        function renderImagePreviews() {
+            const previewDiv = document.getElementById('imagesPreview');
+            previewDiv.innerHTML = currentUploadedImages.map((src, index) => `
+                <div class="preview-thumb-container">
+                    <img src="${src}" class="preview-thumb">
+                    <button type="button" class="btn-remove-thumb" onclick="removeImage(${index})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            currentUploadedImages.splice(index, 1);
+            renderImagePreviews();
+        }
+
+        function loadCategoriesUI() {
+            const categories = getCategories();
+            const select = document.getElementById('prodCategory');
+            select.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            const ul = document.getElementById('categoryListUl');
+            ul.innerHTML = categories.map(c => `
+                <li>
+                    <span><strong>${c.name}</strong> <small style="color:#888;">(${c.id})</small></span>
+                    <button class="btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="removeCategory('${c.id}')">Eliminar</button>
+                </li>
+            `).join('');
+        }
+
+        async function loadAdminTable() {
+            const products = await getProducts();
+            const tbody = document.getElementById('adminTableBody');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No hay productos registrados.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td><img src="${p.imagenes && p.imagenes.length > 0 ? p.imagenes[0] : 'img/icono.jpg'}" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px; background:#000; border:1px solid #333;"></td>
+                    <td><strong>${p.id}</strong><br><span style="color:#aaa; font-size:0.85rem;">${p.title}</span></td>
+                    <td style="color: var(--jett-gold); font-weight: bold;">${p.price}</td>
+                    <td><span class="badge-cat">${p.category}</span></td>
+                    <td>
+                        <button class="btn-edit" onclick="editProduct('${p.id}')">Editar</button>
+                        <button class="btn-danger" onclick="removeProduct('${p.id}')">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('categoryForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('catId').value.trim().toLowerCase();
+            const name = document.getElementById('catName').value.trim();
+            saveCategory({ id, name });
+            document.getElementById('categoryForm').reset();
+            loadCategoriesUI();
+        });
+
+        function removeCategory(id) {
+            if (confirm(`¿Eliminar categoría "${id}"?`)) {
+                deleteCategory(id);
+                loadCategoriesUI();
+            }
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const descriptionHTML = quillEditor.root.innerHTML;
+
+            const productData = {
+                id: document.getElementById('prodId').value.trim(),
+                title: document.getElementById('prodTitle').value.trim(),
+                price: document.getElementById('prodPrice').value.trim(),
+                category: document.getElementById('prodCategory').value,
+                quote: document.getElementById('prodQuote').value.trim(),
+                shipping: document.getElementById('prodShipping').value.trim(),
+                description: descriptionHTML,
+                imagenes: currentUploadedImages.length > 0 ? currentUploadedImages : ['img/icono.jpg'],
+                wa_msg: document.getElementById('prodWa').value.trim() || `Hola Jettphone, estoy interesado en ${document.getElementById('prodTitle').value}`
+            };
+
+            await saveProduct(productData);
+            alert('¡Producto guardado exitosamente en la base de datos!');
+            resetForm();
+            loadAdminTable();
+        });
+
+        async function editProduct(id) {
+            const p = await getProductById(id);
+            if (!p) return;
+
+            document.getElementById('prodId').value = p.id;
+            document.getElementById('prodId').readOnly = true;
+            document.getElementById('prodTitle').value = p.title;
+            document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodCategory').value = p.category;
+            document.getElementById('prodQuote').value = p.quote || '';
+            document.getElementById('prodShipping').value = p.shipping || '';
+            
+            quillEditor.root.innerHTML = p.description || '';
+
+            currentUploadedImages = p.imagenes || [];
+            renderImagePreviews();
+
+            document.getElementById('prodWa').value = p.wa_msg || '';
+
+            document.getElementById('form-title').innerText = 'Editar Producto: ' + p.id;
+            document.getElementById('saveBtn').innerText = 'Actualizar Producto';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function removeProduct(id) {
+            if (confirm(`¿Estás seguro de eliminar el producto "${id}"?`)) {
+                await deleteProduct(id);
+                loadAdminTable();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            quillEditor.root.innerHTML = '';
+            currentUploadedImages = [];
+            renderImagePreviews();
+            document.getElementById('prodId').readOnly = false;
+            document.getElementById('form-title').innerText = 'Crear / Editar Producto';
+            document.getElementById('saveBtn').innerText = 'Guardar Producto';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

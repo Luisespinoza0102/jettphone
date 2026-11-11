@@ -1,12 +1,12 @@
-/* --- Variables Globales (Colores de la marca) --- */
+/* --- Variables Globales --- */
 :root {
-    --jett-gold: #FFD700;     /* El color amarillo/dorado principal */
-    --jett-dark-bg: #121212;  /* Color de fondo muy oscuro */
-    --jett-text-light: #E0E0E0; /* Color para texto secundario (casi blanco) */
-    --jett-font: 'Montserrat', sans-serif; /* La tipografía elegida */
+    --jett-gold: #FFD700;
+    --jett-dark-bg: #121212;
+    --jett-card-bg: #1a1a1a;
+    --jett-border: #2a2a2a;
+    --jett-font: 'Montserrat', sans-serif;
 }
 
-/* --- Estilos Base --- */
 body {
     margin: 0;
     padding: 0;
@@ -16,389 +16,196 @@ body {
     box-sizing: border-box;
 }
 
-*, *:before, *:after {
-    box-sizing: inherit;
-}
+*, *:before, *:after { box-sizing: inherit; }
 
-.precio {
-    color: var(--jett-gold);
-    font-weight: bold;
-}
-/* ================= ESTILOS SECCIÓN HERO ================= */
+.text-gold { color: var(--jett-gold); }
+.precio { color: var(--jett-gold); font-weight: 800; font-size: 1.4rem; }
 
+/* --- HERO SECTION --- */
 .jett-hero {
-    /* Altura mínima: ocupa toda la pantalla del móvil */
-    min-height: 100vh; 
-    
-    /* Centrado del contenido con Flexbox */
+    min-height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 30px 20px;
-    background: url('/img/fondo.png') no-repeat center center/cover;
-   
-    
-    /* Efecto de sombra interna para oscurecer los bordes (vignette) */
-    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+    padding: 40px 20px;
+    background: linear-gradient(to bottom, rgba(18,18,18,0.7), #121212), url('img/fondo.png') no-repeat center center/cover;
+    box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
 }
 
-.hero-container {
-    max-width: 600px; /* Ancho máximo para que no se desparrame en PC */
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Asegura que todo esté centrado horizontalmente */
-}
-
-/* --- Badge Superior --- */
-.badge-premium {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px; /* Espacio entre icono y texto */
-    
-    color: var(--jett-gold);
-    border: 2px solid var(--jett-gold);
-    padding: 8px 20px;
-    border-radius: 50px; /* Bordes completamente redondeados */
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 40px; /* Espacio debajo del badge */
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); /* Resplandor sutil dorado */
-}
-
-.badge-premium svg {
-    stroke: var(--jett-gold); /* Color del icono SVG */
-}
-
-/* --- Título Principal --- */
-.hero-title {
-    color: var(--jett-gold);
-    font-size: 3.5rem; /* Tamaño grande para móvil */
-    font-weight: 800; /* Extra bold */
-    text-transform: uppercase;
-    letter-spacing: 2px; /* Separación entre letras */
-    margin: 10px 0 20px 0; /* Margen inferior */
-    line-height: 1;
-}
+.hero-container { max-width: 700px; width: 100%; display: flex; flex-direction: column; align-items: center; }
 
 .hero-logo {
-    width: 120px;       /* Tamaño del círculo */
-    height: 120px;
-    margin: 0 auto 20px; /* Centrado y con espacio abajo */
-    border-radius: 50%; /* Hace que sea un círculo perfecto */
-    overflow: hidden;    /* Corta la imagen en círculo */
-    border: 3px solid #FFD700; /* Borde dorado */
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); /* Resplandor dorado suave */
-    background-color: #000;
+    width: 130px; height: 130px; border-radius: 50%; overflow: hidden;
+    border: 3px solid var(--jett-gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    background-color: #000; margin-bottom: 25px;
+}
+.hero-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+.badge-premium {
+    display: inline-flex; align-items: center; gap: 8px; color: var(--jett-gold);
+    border: 1px solid var(--jett-gold); padding: 8px 22px; border-radius: 50px;
+    font-size: 0.9rem; font-weight: 600; margin-bottom: 25px; background: rgba(255,215,0,0.05);
 }
 
-.hero-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ajusta la imagen sin deformarla */
-}
-
-
-
-/* ================= SECCIÓN PRODUCTOS ================= */
-.products-section {
-    padding: 80px 20px;
-    background-color: var(--jett-dark-bg);
-}
-
-.section-title {
-    font-size: 2.5rem;
-    text-align: center;
-    margin-bottom: 10px;
-    color: white;
-    text-transform: uppercase;
-    font-weight: 800;
-}
-
-.text-gold {
-    color: var(--jett-gold);
-}
-
-.section-subtitle {
-    text-align: center;
-    color: #888;
-    max-width: 600px;
-    margin: 0 auto 40px auto;
-    font-size: 1rem;
-}
-
-/* --- Filtros --- */
-.filters-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 50px;
-}
-
-.filter-btn {
-    background: transparent;
-    border: 1px solid var(--jett-gold);
-    color: var(--jett-gold);
-    padding: 10px 25px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-family: var(--jett-font);
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.filter-btn:hover, .filter-btn.active {
-    background: var(--jett-gold);
-    color: var(--jett-dark-bg);
-}
-
-/* --- Grid de Productos --- */
-.products-grid {
-    display: grid;
-    /* Grid responsivo: crea tantas columnas como quepan (mínimo 300px ancho) */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* --- Tarjeta de Producto (Card) --- */
-.product-card {
-    background-color: #1a1a1a; /* Un poco más claro que el fondo negro */
-    border-radius: 20px;
-    overflow: hidden;
-    text-decoration: none; /* Quitar subrayado del enlace */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #333;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15); /* Resplandor dorado al pasar mouse */
-    border-color: var(--jett-gold);
-}
-
-.card-image {
-    width: 100%;
-    height: 250px; /* Altura fija para la imagen */
-    background-color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.card-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* Asegura que la imagen se vea completa */
-    transition: transform 0.3s ease;
-}
-
-.product-card:hover .card-image img {
-    transform: scale(1.05); /* Zoom sutil en la imagen al hacer hover */
-}
-
-.card-content {
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.card-content h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.3rem;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.card-quote {
-    color: var(--jett-gold);
-    font-style: italic;
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-}
-
-.card-features {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px 0;
-    font-size: 0.9rem;
-    color: #ccc;
-}
-
-.card-features li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-
-.btn-card {
-    margin-top: auto; /* Empuja el botón al fondo de la tarjeta */
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #333;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: 0.3s;
-}
-
-.product-card:hover .btn-card {
-    background-color: var(--jett-gold);
-    color: var(--jett-dark-bg);
-}
-
-/* ================= BOTÓN FLOTANTE WHATSAPP ================= */
-.whatsapp-float {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #25D366;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-    z-index: 1000;
-    transition: transform 0.3s ease;
-    animation: pulse 2s infinite;
-}
-
-.whatsapp-float:hover {
-    transform: scale(1.1);
-}
-
-.jett-footer {
-    background-color: #0a0a0a;
-    padding: 50px 20px 20px;
-    margin-top: 50px;
-    border-top: 2px solid #333;
-    text-align: center;
-}
-
-.footer-logo {
-    color: #FFD700; /* Dorado */
-    font-weight: 800;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-}
-
-.footer-tagline {
-    color: #888;
-    font-style: italic;
-    margin-bottom: 30px;
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-}
-
-.social-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: white;
-    transition: 0.3s;
-}
-
-.social-icon img {
-    width: 35px;
-    height: 35px;
-    margin-bottom: 8px;
-    filter: grayscale(100%); /* Los hace elegantes en gris */
-    transition: 0.3s;
-}
-
-.social-icon:hover img {
-    filter: grayscale(0%); /* Vuelven a color al pasar el mouse */
-    transform: translateY(-5px);
-}
-
-.social-icon span {
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.footer-bottom {
-    border-top: 1px solid #222;
-    padding-top: 20px;
-    font-size: 0.75rem;
-    color: #555;
-}
-
-/* Animación de latido para el botón */
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-    70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-}
-
-/* Ajuste para pantallas más grandes */
-@media (min-width: 768px) {
-    .hero-title {
-        font-size: 5rem;
-    }
-}
-
-/* --- Subtítulos --- */
-.hero-subtitle {
-    color: var(--jett-text-light);
-    font-size: 1.1rem;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    font-weight: 400;
+.hero-title {
+    color: var(--jett-gold); font-size: 3.8rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 3px; margin: 0 0 15px 0;
 }
 
 .hero-quote {
-    color: var(--jett-gold);
-    font-size: 1.2rem;
-    font-style: italic;
-    font-weight: 500;
-    margin-bottom: 50px; /* Espacio grande antes del botón */
+    color: #ddd; font-size: 1.2rem; font-style: italic; font-weight: 500; margin-bottom: 40px;
 }
 
-/* --- Botón Principal (CTA) --- */
 .btn-jett-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    display: inline-flex; align-items: center; gap: 10px; background-color: var(--jett-gold);
+    color: var(--jett-dark-bg); text-decoration: none; padding: 16px 35px; border-radius: 14px;
+    font-size: 1.1rem; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+}
+.btn-jett-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5); }
+.btn-jett-primary svg { stroke: var(--jett-dark-bg); }
 
-    background-color: var(--jett-gold);
-    color: var(--jett-dark-bg); /* Texto negro sobre fondo amarillo */
-    
-    text-decoration: none; /* Quitar subrayado de enlace */
-    padding: 16px 40px;
-    border-radius: 12px; /* Bordes redondeados pero no completos */
-    font-size: 1.1rem;
-    font-weight: 700;
-    
-    transition: all 0.3s ease; /* Suavizar animaciones al pasar el mouse */
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+/* --- PRODUCTOS & BUSCADOR --- */
+.products-section { padding: 90px 20px; background-color: var(--jett-dark-bg); }
+.container { max-width: 1200px; margin: 0 auto; }
+
+.section-header { text-align: center; margin-bottom: 40px; }
+.section-title { font-size: 2.5rem; text-transform: uppercase; font-weight: 800; margin: 0 0 10px 0; }
+.section-subtitle { color: #888; font-size: 1rem; margin: 0; }
+
+.search-wrapper {
+    max-width: 550px; margin: 0 auto 35px auto; display: flex; align-items: center; gap: 12px;
+    background: var(--jett-card-bg); border: 1px solid var(--jett-border); border-radius: 40px;
+    padding: 14px 24px; transition: border-color 0.3s;
+}
+.search-wrapper:focus-within { border-color: var(--jett-gold); }
+.search-wrapper input {
+    background: transparent; border: none; outline: none; color: white; width: 100%; font-size: 1rem; font-family: inherit;
 }
 
-/* Efecto al pasar el mouse por encima del botón */
-.btn-jett-primary:hover {
-    transform: translateY(-3px); /* Se mueve ligeramente hacia arriba */
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5); /* Sombra más intensa */
+.filters-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 50px; }
+.filter-btn {
+    background: transparent; border: 1px solid var(--jett-border); color: #ccc; padding: 10px 22px;
+    border-radius: 25px; cursor: pointer; font-family: var(--jett-font); font-weight: 600; transition: all 0.3s ease;
 }
+.filter-btn:hover, .filter-btn.active { background: var(--jett-gold); color: var(--jett-dark-bg); border-color: var(--jett-gold); }
 
-.btn-jett-primary svg {
-    stroke: var(--jett-dark-bg); /* El icono dentro del botón es negro */
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+
+/* --- TARJETA DE PRODUCTO MODERNA --- */
+.product-card {
+    background-color: var(--jett-card-bg); border-radius: 20px; overflow: hidden;
+    text-decoration: none; color: white; display: flex; flex-direction: column;
+    border: 1px solid var(--jett-border); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-8px); border-color: var(--jett-gold);
+    box-shadow: 0 12px 35px rgba(255, 215, 0, 0.12);
+}
+.card-image {
+    width: 100%; height: 260px; background-color: #000; display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.card-image img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s ease; }
+.product-card:hover .card-image img { transform: scale(1.06); }
+
+.card-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
+.card-content h3 { margin: 0 0 8px 0; font-size: 1.25rem; font-weight: 800; text-transform: uppercase; }
+.card-quote { color: var(--jett-gold); font-style: italic; font-size: 0.9rem; margin-bottom: 15px; }
+.card-features { list-style: none; padding: 0; margin: 0 0 20px 0; font-size: 0.88px; color: #aaa; }
+.card-features li { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+
+.card-footer-row { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid #252525; }
+.btn-card { color: var(--jett-gold); font-size: 0.9rem; font-weight: 600; transition: transform 0.2s; }
+.product-card:hover .btn-card { transform: translateX(4px); }
+
+/* --- PANEL ADMIN (2 CARDS) --- */
+.admin-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--jett-border); padding-bottom: 20px; }
+.admin-title { color: white; margin: 0; font-size: 2rem; font-weight: 800; }
+
+.admin-grid-top { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+@media(max-width: 900px) { .admin-grid-top { grid-template-columns: 1fr; } }
+
+.admin-card { background: var(--jett-card-bg); border-radius: 20px; padding: 30px; border: 1px solid var(--jett-border); }
+.card-heading { color: white; margin-top: 0; margin-bottom: 20px; font-size: 1.4rem; font-weight: 700; border-bottom: 1px solid var(--jett-border); padding-bottom: 12px; }
+
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; margin-bottom: 7px; color: var(--jett-gold); font-weight: 600; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--jett-border);
+    background: #111; color: white; font-family: inherit; font-size: 0.95rem; outline: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--jett-gold); }
+.form-group textarea { height: 90px; resize: vertical; }
+
+.form-actions { display: flex; gap: 10px; margin-top: 20px; }
+.btn-action {
+    background-color: var(--jett-gold); color: var(--jett-dark-bg); padding: 12px 24px;
+    border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.3s;
+}
+.btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
+.btn-danger { background-color: #ff4d4d; color: white; padding: 6px 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-edit { background-color: #3b82f6; color: white; padding: 6px 12px; border: none; border-radius: 8px; cursor: pointer; margin-right: 5px; font-weight: 600; }
+
+.category-list-ul { list-style: none; padding: 0; margin: 10px 0 0 0; max-height: 250px; overflow-y: auto; }
+.category-list-ul li { display: flex; justify-content: space-between; align-items: center; background: #111; padding: 10px 15px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #222; }
+
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--jett-border); }
+th { color: var(--jett-gold); font-weight: 700; }
+.badge-cat { background: rgba(255,215,0,0.1); color: var(--jett-gold); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
+
+/* --- DETALLE DE PRODUCTO --- */
+.product-detail-container {
+    max-width: 1150px; margin: 30px auto 60px auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 50px;
+}
+.back-link { color: var(--jett-gold); text-decoration: none; font-weight: 600; font-size: 1.05rem; }
+.detail-image-section { display: flex; flex-direction: column; gap: 15px; }
+.main-img-container {
+    background: var(--jett-card-bg); border-radius: 20px; padding: 25px; border: 1px solid var(--jett-border);
+    display: flex; justify-content: center; align-items: center; height: 420px;
+}
+.main-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; }
+.thumbnail-grid { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; }
+.thumb { width: 85px; height: 85px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; opacity: 0.5; transition: 0.3s; }
+.thumb.active { border-color: var(--jett-gold); opacity: 1; }
+
+.detail-info h1 { font-size: 2.5rem; color: var(--jett-gold); margin: 0 0 10px 0; font-weight: 800; }
+.detail-price { font-size: 2.8rem; color: white; font-weight: 800; margin-bottom: 15px; display: block; }
+.shipping-info { color: #25D366; font-weight: 600; margin-bottom: 25px; display: flex; align-items: center; gap: 8px; }
+.detail-desc { color: #ccc; line-height: 1.8; margin-bottom: 35px; font-size: 1.05rem; }
+.detail-desc ul { list-style: none; padding: 0; }
+
+.btn-buy-wa {
+    background-color: #25D366; color: white; padding: 18px 40px; text-decoration: none;
+    border-radius: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 12px; font-size: 1.2rem;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3); transition: transform 0.3s ease;
+}
+.btn-buy-wa:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5); }
+
+@media (max-width: 850px) { .product-detail-container { grid-template-columns: 1fr; } }
+
+/* --- FOOTER --- */
+.jett-footer { background-color: #0a0a0a; padding: 60px 20px 25px; margin-top: 80px; border-top: 2px solid var(--jett-border); text-align: center; }
+.footer-logo { color: var(--jett-gold); font-weight: 800; letter-spacing: 3px; margin-bottom: 8px; font-size: 1.5rem; }
+.footer-tagline { color: #777; font-style: italic; margin-bottom: 35px; }
+.social-links { display: flex; justify-content: center; gap: 35px; flex-wrap: wrap; margin-bottom: 40px; }
+.social-icon { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: white; transition: 0.3s; }
+.social-icon img { width: 38px; height: 38px; margin-bottom: 8px; filter: grayscale(100%); transition: 0.3s; }
+.social-icon:hover img { filter: grayscale(0%); transform: translateY(-5px); }
+.social-icon span { font-size: 0.8rem; font-weight: 500; color: #aaa; }
+.footer-bottom { border-top: 1px solid #1a1a1a; padding-top: 25px; font-size: 0.8rem; color: #555; }
+
+/* WhatsApp Float */
+.whatsapp-float {
+    position: fixed; bottom: 30px; right: 30px; background-color: #25D366; width: 65px; height: 65px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); z-index: 1000; transition: transform 0.3s ease; animation: pulse 2s infinite;
+}
+.whatsapp-float:hover { transform: scale(1.1); }
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }

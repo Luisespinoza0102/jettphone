@@ -256,9 +256,10 @@
             
             const success = await saveCategory({ id, name });
             if (success) {
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Pausa de propagación
                 document.getElementById('categoryForm').reset();
                 await loadCategoriesUI();
-                alert('¡Categoría creada y guardada en GitHub con éxito!');
+                alert('¡Categoría creada y sincronizada al instante!');
             }
         });
 
@@ -266,8 +267,9 @@
             if (confirm(`¿Eliminar categoría "${id}"?`)) {
                 const success = await deleteCategory(id);
                 if (success) {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                     await loadCategoriesUI();
-                    alert('Categoría eliminada de GitHub.');
+                    alert('Categoría eliminada de la nube.');
                 }
             }
         }
@@ -292,7 +294,10 @@
 
             const success = await saveProduct(productData);
             if (success) {
-                alert('¡Producto guardado y actualizado en la nube global con éxito!');
+                // Pausa corta para asegurar que GitHub procese el JSON antes de recargar la tabla
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                alert('¡Producto guardado y actualizado en la tienda al instante!');
                 resetForm();
                 await loadAdminTable();
             }
@@ -327,6 +332,7 @@
             if (confirm(`¿Estás seguro de eliminar el producto "${id}"?`)) {
                 const success = await deleteProduct(id);
                 if (success) {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                     await loadAdminTable();
                     alert('Producto eliminado de la nube.');
                 }

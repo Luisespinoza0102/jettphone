@@ -1,5 +1,5 @@
 // =========================================================================
-// JETTPHONE - CAPA DE DATOS GLOBAL VIA GITHUB API (Segura)
+// JETTPHONE - CAPA DE DATOS GLOBAL VIA GITHUB API (Anti-Caché)
 // =========================================================================
 
 const GITHUB_USER = 'Luisespinoza0102';
@@ -20,11 +20,11 @@ function getGitHubToken() {
 
 const FILE_PATH = 'data.json';
 
-// 1. Obtener todos los productos desde el archivo data.json en GitHub
+// 1. Obtener todos los productos desde GitHub con { cache: 'no-store' } para evitar demoras
 async function getProducts() {
     try {
         const url = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${FILE_PATH}?t=${new Date().getTime()}`;
-        const response = await fetch(url);
+        const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) throw new Error();
         const data = await response.json();
         return data.products || [];
@@ -52,11 +52,11 @@ async function getProductById(id) {
     return products.find(p => p.id === id) || null;
 }
 
-// 3. Obtener las categorías desde el archivo data.json en GitHub
+// 3. Obtener las categorías desde GitHub con { cache: 'no-store' }
 async function getCategories() {
     try {
         const url = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${FILE_PATH}?t=${new Date().getTime()}`;
-        const response = await fetch(url);
+        const response = await fetch(url, { cache: 'no-store' });
         if (!response.ok) throw new Error();
         const data = await response.json();
         return data.categories || [
@@ -88,7 +88,8 @@ async function saveToGitHub(newProducts, newCategories) {
     try {
         // Obtener el SHA actual del archivo (requisito obligatorio de la API de GitHub)
         const getRes = await fetch(apiUrl, {
-            headers: { 'Authorization': `token ${token}` }
+            headers: { 'Authorization': `token ${token}` },
+            cache: 'no-store'
         });
         
         if (!getRes.ok) throw new Error("No se pudo conectar con la API de GitHub. Verifica tu Token.");

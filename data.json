@@ -1,19 +1,5 @@
 {
-  "products": [
-    {
-      "id": "airpods-pro-2",
-      "title": "AirPods Pro 2 ✅🎧",
-      "price": "20$",
-      "category": "audifonos",
-      "quote": "Silencia el mundo, enciende la música.",
-      "shipping": "🚚 Delivery gratis (Zonas Centricas)",
-      "description": "<p><br></p><p>-Vinculación directa 📲</p><p>-Personalización de nombre📳&nbsp;&nbsp;</p><p>-Controladores táctil 🎛️</p><p>-Cancelación de ruido (100%activa)🎧</p><p>-Sonido 1.1💥</p><p>-Puerto de carga tipo C🔋</p><p>-GPS📍</p>",
-      "imagenes": [
-        "img/airpods1.jpeg"
-      ],
-      "wa_msg": "Hola Jettphone, estoy interesado en los AirPods Pro 2"
-    }
-  ],
+  "products": [],
   "categories": [
     {
       "id": "audifonos",

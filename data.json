@@ -47,6 +47,10 @@
     {
       "id": "panelesled",
       "name": "Panes Led"
+    },
+    {
+      "id": "apple watch",
+      "name": "Apple Watch"
     }
   ]
 }
